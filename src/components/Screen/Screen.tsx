@@ -1,6 +1,19 @@
 import {PropsWithChildren} from 'react';
-import {View} from 'react-native';
+import {ViewStyle} from 'react-native';
+import {Edges, SafeAreaView} from 'react-native-safe-area-context';
+import {Colors} from '../../theme/colors';
 
-export function Screen({children, gutter}: PropsWithChildren<{gutter?: boolean}>): React.ReactElement {
-  return <View style={{backgroundColor: 'white', flex: 1, padding: gutter ? 8 : 0}}>{children}</View>;
+export interface ScreenProps {
+  gutter?: boolean;
+  style?: ViewStyle;
+}
+
+const edges: Edges = ['left', 'right', 'bottom'];
+
+export function Screen({children, gutter, style}: PropsWithChildren<ScreenProps>): React.ReactElement {
+  return (
+    <SafeAreaView edges={edges} style={{backgroundColor: Colors.White, flex: 1, padding: gutter ? 16 : 0, ...style}}>
+      {children}
+    </SafeAreaView>
+  );
 }

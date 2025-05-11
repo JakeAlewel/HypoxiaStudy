@@ -1,12 +1,23 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../RootState';
+import {useSelector} from 'react-redux';
+import {useCallback} from 'react';
+
+export enum TrialRun {
+  Ground = 'Ground',
+  Air1 = 'Air1',
+  Air2 = 'Air2',
+}
+
+export interface Trial {
+  run: TrialRun;
+  completed: boolean;
+}
 
 export interface Participant {
   name: string;
   dateAdded: string;
-  completedGround: boolean;
-  completedAir1: boolean;
-  completedAir2: boolean;
+  trials: Record<TrialRun, Trial>;
 }
 
 export interface ParticipantsState {
@@ -17,24 +28,35 @@ const initialState: ParticipantsState = {
   participants: {},
 };
 
+function createDefaultTrial(run: TrialRun): Trial {
+  return {
+    run,
+    completed: false,
+  };
+}
+
+function createDefaultParticipant(name: string): Participant {
+  return {
+    name,
+    dateAdded: new Date().toISOString(),
+    trials: {
+      [TrialRun.Ground]: createDefaultTrial(TrialRun.Ground),
+      [TrialRun.Air1]: createDefaultTrial(TrialRun.Air1),
+      [TrialRun.Air2]: createDefaultTrial(TrialRun.Air2),
+    },
+  };
+}
+
 const slice = createSlice({
   name: 'participants',
   initialState,
   reducers: {
     addParticipant: (state, {payload}: PayloadAction<Pick<Participant, 'name'>>) => {
-      const newParticipant: Participant = {
-        ...payload,
-        dateAdded: new Date().toISOString(),
-        completedGround: false,
-        completedAir1: false,
-        completedAir2: false,
-      };
-
       return {
         ...state,
         participants: {
           ...state.participants,
-          [payload.name]: newParticipant,
+          [payload.name]: createDefaultParticipant(payload.name),
         },
       };
     },
@@ -53,3 +75,7 @@ export const {addParticipant, removeParticipant} = slice.actions;
 export const participants = slice.reducer;
 
 export const selectParticipants = (state: RootState) => state.participants.participants;
+
+export function useParticipant(name: string): Participant {
+  return useSelector(useCallback((state: RootState) => state.participants.participants[name], [name]));
+}

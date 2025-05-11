@@ -1,4 +1,4 @@
-import {Alert, Button, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {addParticipant, Participant, removeParticipant, selectParticipants} from '../../redux/reducers/participants';
 import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,6 +7,8 @@ import {Screen} from '../../components/Screen/Screen';
 import {Colors} from '../../theme/colors';
 import {useNavigation} from '@react-navigation/native';
 import {Routes} from '../../navigators/Routes';
+import {createPressableStyles} from '../../theme/button';
+import {Button} from '../../components/Button/Button';
 
 function SearchBar({term, setTerm}: {term: string; setTerm: (a: string) => void}): React.ReactElement {
   const dispatch = useDispatch();
@@ -36,12 +38,12 @@ function SearchBar({term, setTerm}: {term: string; setTerm: (a: string) => void}
         clearButtonMode="always"
         placeholder="Create / Search Participant"
       />
-      {!!term && <Button title="Create" onPress={onCreate} disabled={!!termAlreadyExists} />}
+      {!!term && <Button variant="native" title="Create" onPress={onCreate} disabled={!!termAlreadyExists} />}
     </View>
   );
 }
 
-function UserRow({name, completedGround, completedAir1, completedAir2}: Participant): React.ReactElement {
+function UserRow({name, trials}: Participant): React.ReactElement {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -64,23 +66,23 @@ function UserRow({name, completedGround, completedAir1, completedAir2}: Particip
   return (
     <Pressable
       onPress={handleRowTap}
-      style={({pressed}) => [
-        {
-          backgroundColor: pressed ? Colors.LightGray : Colors.White,
-          gap: 8,
-          flexDirection: 'row',
-          alignItems: 'stretch',
-        },
-      ]}>
-      <Text style={{flexGrow: 1, paddingVertical: 16, paddingHorizontal: 8}}>{name}</Text>
+      style={createPressableStyles({
+        gap: 8,
+        padding: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+      })}>
+      <Text style={{flexGrow: 1, paddingHorizontal: 8}}>{name}</Text>
       <View style={{gap: 8, flexDirection: 'row', alignItems: 'center'}}>
-        {[completedGround, completedAir1, completedAir2].map((completed, index) => (
+        {Object.values(trials).map(({completed}, index) => (
           <Text key={index} style={{opacity: completed ? 1 : 0.25}}>
             🪂
           </Text>
         ))}
       </View>
-      <Pressable onPress={handleDelete} style={{flexShrink: 0, justifyContent: 'center', paddingHorizontal: 8}}>
+      <Pressable
+        onPress={handleDelete}
+        style={createPressableStyles({flexShrink: 0, justifyContent: 'center', paddingHorizontal: 8, borderRadius: 8})}>
         <Text>🗑️</Text>
       </Pressable>
     </Pressable>
@@ -92,7 +94,11 @@ const renderItem = ({item}: ListRenderItemInfo<Participant>) => {
 };
 
 function Divider(): React.ReactElement {
-  return <View style={{height: 1, flexGrow: 1, marginHorizontal: 8, backgroundColor: Colors.DarkBlue}} />;
+  return (
+    <View
+      style={{height: StyleSheet.hairlineWidth, flexGrow: 1, marginHorizontal: 8, backgroundColor: Colors.DarkBlue}}
+    />
+  );
 }
 
 function ListEmptyState(): React.ReactElement {

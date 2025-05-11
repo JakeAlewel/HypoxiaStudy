@@ -3,6 +3,9 @@ import {HomeScreen} from '../../screens/HomeScreen/HomeScreen';
 import {Colors} from '../../theme/colors';
 import {RootStackParamList, Routes} from '../Routes';
 import {ParticipantDetailsScreen} from '../../screens/ParticipantDetailsScreen/ParticipantDetailsScreen';
+import {TrialStartScreen} from '../../screens/TrialStartScreen/TrialStartScreen';
+import {TutorialScreen} from '../../screens/Tutorial/Tutorial';
+import {TrialNames} from '../../strings/TrialNames';
 
 const RootStackNavigator = createNativeStackNavigator<RootStackParamList>();
 
@@ -28,6 +31,24 @@ export function RootStack(): React.JSX.Element {
         component={ParticipantDetailsScreen}
         name={Routes.ParticipantDetails}
         options={{headerTitle: 'Participant Details'}}
+      />
+      <RootStackNavigator.Screen
+        component={TrialStartScreen}
+        name={Routes.TrialStart}
+        options={{headerTitle: 'Trial Start'}}
+      />
+      <RootStackNavigator.Screen
+        component={TutorialScreen}
+        name={Routes.Tutorial}
+        options={({
+          route: {
+            params: {trialRoute},
+          },
+        }) => ({
+          headerTitle: `${TrialNames[trialRoute]}`,
+          headerBackVisible: false,
+          gestureEnabled: false,
+        })}
       />
     </RootStackNavigator.Navigator>
   );
