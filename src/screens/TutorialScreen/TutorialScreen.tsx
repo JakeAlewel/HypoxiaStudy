@@ -3,7 +3,6 @@ import {RootStackParamList, Routes, TrialRoutes} from '../../navigators/Routes';
 import {TrialRun} from '../../redux/reducers/participants';
 import {View} from 'react-native';
 import {Screen} from '../../components/Screen/Screen';
-import {useNavigation} from '@react-navigation/native';
 import {Button} from '../../components/Button/Button';
 
 export interface TutorialScreenParams {
@@ -14,18 +13,16 @@ export interface TutorialScreenParams {
 
 type TrialStartScreenProps = NativeStackScreenProps<RootStackParamList, Routes.Tutorial>;
 
-export function TutorialScreen({
-  route: {
-    params: {name, run, trialRoute},
-  },
-}: TrialStartScreenProps): React.ReactElement {
-  const navigation = useNavigation();
+export function TutorialScreen({route, navigation}: TrialStartScreenProps): React.ReactElement {
+  const {name, run, trialRoute} = route.params;
+
   const onBegin = () => {
     navigation.navigate(trialRoute, {
       name,
       run,
     });
   };
+
   return (
     <Screen gutter style={{justifyContent: 'space-between'}}>
       <View style={{flex: 1}} />

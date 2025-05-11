@@ -1,10 +1,11 @@
 import {TrialRun} from '../redux/reducers/participants';
 import {ParticipantDetailsScreenParams} from '../screens/ParticipantDetailsScreen/ParticipantDetailsScreen';
+import {TrialCompletionScreenParams} from '../screens/TrialCompletionScreen/TrialCompletionScreen';
 import {TrialStartScreenParams} from '../screens/TrialStartScreen/TrialStartScreen';
-import {TutorialScreenParams} from '../screens/Tutorial/Tutorial';
+import {TutorialScreenParams} from '../screens/TutorialScreen/TutorialScreen';
 
 export enum Routes {
-  HomeFeed = 'HomeFeed',
+  HomeScreen = 'HomeScreen',
   ParticipantDetails = 'ParticipantDetails',
   TrialStart = 'TrialStart',
   Tutorial = 'Tutorial',
@@ -23,7 +24,7 @@ export interface TrialRoutesScreenParams {
 }
 
 export type RootStackParamList = {
-  [Routes.HomeFeed]: undefined;
+  [Routes.HomeScreen]: undefined;
   [Routes.ParticipantDetails]: ParticipantDetailsScreenParams;
   [Routes.TrialStart]: TrialStartScreenParams;
   [Routes.Tutorial]: TutorialScreenParams;
@@ -31,7 +32,7 @@ export type RootStackParamList = {
   [Routes.TrailMaking]: TrialRoutesScreenParams;
   [Routes.CardSorting]: TrialRoutesScreenParams;
   [Routes.LetterIdentification]: TrialRoutesScreenParams;
-  [Routes.TrialCompletion]: undefined;
+  [Routes.TrialCompletion]: TrialCompletionScreenParams;
 };
 
 declare global {

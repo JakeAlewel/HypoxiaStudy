@@ -4,7 +4,6 @@ import {Screen} from '../../components/Screen/Screen';
 import {Text} from 'react-native';
 import {TrialRun} from '../../redux/reducers/participants';
 import {RunNames} from '../../strings/RunNames';
-import {useNavigation} from '@react-navigation/native';
 import {Button} from '../../components/Button/Button';
 
 export interface TrialStartScreenParams {
@@ -14,12 +13,8 @@ export interface TrialStartScreenParams {
 
 type TrialStartScreenProps = NativeStackScreenProps<RootStackParamList, Routes.TrialStart>;
 
-export function TrialStartScreen({
-  route: {
-    params: {name, run},
-  },
-}: TrialStartScreenProps): React.ReactElement {
-  const navigation = useNavigation();
+export function TrialStartScreen({route, navigation}: TrialStartScreenProps): React.ReactElement {
+  const {name, run} = route.params;
 
   const onBegin = () => {
     navigation.navigate(Routes.Tutorial, {

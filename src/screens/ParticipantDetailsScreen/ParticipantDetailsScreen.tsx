@@ -39,12 +39,10 @@ function TestStatus({name, run, completed}: {name: string; run: TrialRun; comple
   );
 }
 
-export function ParticipantDetailsScreen({
-  route: {
-    params: {name},
-  },
-}: ParticpantDetailsScreenProps): React.ReactElement {
+export function ParticipantDetailsScreen({route}: ParticpantDetailsScreenProps): React.ReactElement {
+  const {name} = route.params;
   const participant = useParticipant(name);
+
   return (
     <Screen gutter style={{justifyContent: 'space-between'}}>
       <View>
