@@ -86,7 +86,7 @@ const slice = createSlice({
             trials: {
               ...state.participants[name].trials,
               [run]: {
-                ...state.participants[name].trials,
+                ...state.participants[name].trials[run],
                 ...results,
               },
             },

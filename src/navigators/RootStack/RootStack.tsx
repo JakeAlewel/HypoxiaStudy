@@ -11,6 +11,7 @@ import {TrailMakingScreen} from '../../screens/TrailMakingScreen/TrailMakingScre
 import {CardSortingScreen} from '../../screens/CardSortingScreen/CardSortingScreen';
 import {LetterIdentificationScreen} from '../../screens/LetterIdentificationScreen/LetterIdentificationScreen';
 import {TrialCompletionScreen} from '../../screens/TrialCompletionScreen/TrialCompletionScreen';
+import {ExportButton} from '../../screens/HomeScreen/ExportButton';
 
 const RootStackNavigator = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,7 +37,7 @@ export function RootStack(): React.JSX.Element {
       <RootStackNavigator.Screen
         component={HomeScreen}
         name={Routes.HomeScreen}
-        options={{headerTitle: 'Hypoxia Study'}}
+        options={{headerTitle: 'Hypoxia Study', headerRight: ExportButton}}
       />
       <RootStackNavigator.Screen
         component={ParticipantDetailsScreen}

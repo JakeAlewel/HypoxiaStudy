@@ -13,7 +13,7 @@ export interface ButtonProps extends RNButtonProps {
 
 export function Button({variant = 'primary', ...props}: ButtonProps): React.ReactElement {
   if (variant === 'native') {
-    return <RNButton {...props} color={Colors.Blue} />;
+    return <RNButton color={Colors.Blue} {...props} />;
   }
 
   const {onPress, title, style} = props;
