@@ -1,9 +1,11 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList, Routes, TrialRoutes} from '../../navigators/Routes';
 import {TrialRun} from '../../redux/reducers/participants';
-import {View} from 'react-native';
+import {Image, ImageSourcePropType, View} from 'react-native';
 import {Screen} from '../../components/Screen/Screen';
 import {Button} from '../../components/Button/Button';
+import {bordered} from '../../theme/border';
+import {Colors} from '../../theme/colors';
 
 export interface TutorialScreenParams {
   name: string;
@@ -23,9 +25,32 @@ export function TutorialScreen({route, navigation}: TrialStartScreenProps): Reac
     });
   };
 
+  const image = ((): ImageSourcePropType | undefined => {
+    switch (trialRoute) {
+      case Routes.ReactionTime:
+        return require('./ReactionTime.jpg');
+      default:
+        return undefined;
+    }
+  })();
+
   return (
     <Screen gutter style={{justifyContent: 'space-between'}}>
-      <View style={{flex: 1}} />
+      {!!image ? (
+        <Image
+          source={image}
+          resizeMode="contain"
+          style={{
+            ...bordered,
+            alignSelf: 'center',
+            width: '80%',
+            height: 500,
+            backgroundColor: Colors.Gold,
+          }}
+        />
+      ) : (
+        <View style={{flex: 1}} />
+      )}
       <Button onPress={onBegin} title="Begin!" />
     </Screen>
   );

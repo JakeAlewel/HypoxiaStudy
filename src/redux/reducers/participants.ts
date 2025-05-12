@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../RootState';
 import {useSelector} from 'react-redux';
 import {useCallback} from 'react';
+import {ReactionTimeTestResults} from '../../screens/ReactionTimeScreen/ReactionTimeScreen';
 
 export enum TrialRun {
   Ground = 'Ground',
@@ -12,6 +13,7 @@ export enum TrialRun {
 export interface Trial {
   run: TrialRun;
   completed: boolean;
+  reactionTimeResults?: ReactionTimeTestResults;
 }
 
 export interface Participant {
@@ -47,6 +49,12 @@ function createDefaultParticipant(name: string): Participant {
   };
 }
 
+export interface RecordResultsPayload {
+  name: string;
+  run: TrialRun;
+  results: Partial<Omit<Trial, 'run' | 'completed'>>;
+}
+
 const slice = createSlice({
   name: 'participants',
   initialState,
@@ -68,10 +76,28 @@ const slice = createSlice({
         participants: newParticipants,
       };
     },
+    recordResults: (state, {payload: {name, run, results}}: PayloadAction<RecordResultsPayload>) => {
+      return {
+        ...state,
+        participants: {
+          ...state.participants,
+          [name]: {
+            ...state.participants[name],
+            trials: {
+              ...state.participants[name].trials,
+              [run]: {
+                ...state.participants[name].trials,
+                ...results,
+              },
+            },
+          },
+        },
+      };
+    },
   },
 });
 
-export const {addParticipant, removeParticipant} = slice.actions;
+export const {addParticipant, removeParticipant, recordResults} = slice.actions;
 export const participants = slice.reducer;
 
 export const selectParticipants = (state: RootState) => state.participants.participants;

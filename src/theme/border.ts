@@ -1,7 +1,7 @@
-import {ViewStyle} from 'react-native';
+import {ImageStyle, ViewStyle} from 'react-native';
 import {Colors} from './colors';
 
-export const bordered: ViewStyle = {
+export const bordered: ViewStyle & ImageStyle = {
   borderWidth: 1,
   borderRadius: 8,
   borderColor: Colors.DarkBlue,
