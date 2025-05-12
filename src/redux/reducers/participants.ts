@@ -3,6 +3,7 @@ import {RootState} from '../RootState';
 import {useSelector} from 'react-redux';
 import {useCallback} from 'react';
 import {ReactionTimeTestResults} from '../../screens/ReactionTimeScreen/ReactionTimeScreen';
+import {TrailMakingResults} from '../../screens/TrailMakingScreen/TrailMakingScreen';
 
 export enum TrialRun {
   Ground = 'Ground',
@@ -14,6 +15,7 @@ export interface Trial {
   run: TrialRun;
   completed: boolean;
   reactionTimeResults?: ReactionTimeTestResults;
+  trailMakingResults?: TrailMakingResults;
 }
 
 export interface Participant {

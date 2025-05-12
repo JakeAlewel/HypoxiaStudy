@@ -31,6 +31,8 @@ const trialDataToColumns = (trial: Trial): Stringable[] => {
 };
 
 const generateCSV = ({participants}: ParticipantsState): string => {
+  console.log(JSON.stringify(participants, null, 2));
+
   const data: string = Object.values(participants)
     .map(participant =>
       [
@@ -56,11 +58,11 @@ export function ExportButton(): React.ReactElement {
         Share.open({
           url: 'file://' + path,
         }).catch(err => {
-          Alert.alert(`Error sharing: ${err}`, 'Sorry Ethan...');
+          Alert.alert(`${err}`, 'Sorry Ethan...');
         });
       })
       .catch(err => {
-        Alert.alert(`Error sharing: ${err}`, 'Sorry Ethan...');
+        Alert.alert(`${err}`, 'Sorry Ethan...');
       });
   };
 

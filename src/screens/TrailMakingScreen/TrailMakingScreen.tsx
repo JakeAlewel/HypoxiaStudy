@@ -1,14 +1,42 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList, Routes} from '../../navigators/Routes';
 import {Screen} from '../../components/Screen/Screen';
-import {Text} from 'react-native';
-import {Button} from '../../components/Button/Button';
+import {View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {recordResults, TrialRun} from '../../redux/reducers/participants';
+import {useRef, useState} from 'react';
+import {MarkerPositions} from './MarkerPositions';
+import {TrailMarker} from './TrailMarker';
 
 type TrailMakingScreenProps = NativeStackScreenProps<RootStackParamList, Routes.TrailMaking>;
 
+export interface TrailMakingResults {
+  errorCount: number;
+  completionTime: number;
+}
+
 export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): React.ReactElement {
   const {name, run} = route.params;
+
+  const dispatch = useDispatch();
+
+  const errorCount = useRef(0);
+  const startTime = useRef(new Date().getTime());
+
   const onComplete = () => {
+    dispatch(
+      recordResults({
+        name,
+        run,
+        results: {
+          trailMakingResults: {
+            errorCount: errorCount.current,
+            completionTime: new Date().getTime() - startTime.current,
+          },
+        },
+      }),
+    );
+
     navigation.popTo(Routes.Tutorial, {
       name,
       run,
@@ -16,10 +44,35 @@ export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): 
     });
   };
 
+  const markers = MarkerPositions[run];
+  const [targetIndex, setTargetIndex] = useState(0);
+
+  const createPressHandler = (index: number) => () => {
+    if (index === targetIndex) {
+      if (targetIndex === markers.length - 1) {
+        onComplete();
+      }
+      setTargetIndex(targetIndex + 1);
+    } else {
+      errorCount.current += 1;
+    }
+  };
+
   return (
-    <Screen gutter>
-      <Text>Made it</Text>
-      <Button title={'Next'} onPress={onComplete} />
+    <Screen>
+      <View style={{flex: 1, width: '100%', height: '100%'}}>
+        {markers.map((pos, index) => (
+          <TrailMarker
+            key={index}
+            position={pos}
+            index={index}
+            targetIndex={targetIndex}
+            onPress={createPressHandler(index)}
+          />
+        ))}
+        {/* Uncomment the image to display the original layout guide */}
+        {/* <TrailMakingGuide run={run} /> */}
+      </View>
     </Screen>
   );
 }
