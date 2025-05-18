@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Routes} from '../../navigators/Routes';
 import {createPressableStyles} from '../../theme/button';
 import {Button} from '../../components/Button/Button';
+import {isTrialComplete} from '../../redux/utils';
 
 function SearchBar({term, setTerm}: {term: string; setTerm: (a: string) => void}): React.ReactElement {
   const dispatch = useDispatch();
@@ -74,8 +75,8 @@ function UserRow({name, trials}: Participant): React.ReactElement {
       })}>
       <Text style={{flexGrow: 1, paddingHorizontal: 8}}>{name}</Text>
       <View style={{gap: 8, flexDirection: 'row', alignItems: 'center'}}>
-        {Object.values(trials).map(({completed}, index) => (
-          <Text key={index} style={{opacity: completed ? 1 : 0.25}}>
+        {Object.values(trials).map((trial, index) => (
+          <Text key={index} style={{opacity: isTrialComplete(trial) ? 1 : 0.25}}>
             🪂
           </Text>
         ))}

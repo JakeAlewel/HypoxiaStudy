@@ -33,6 +33,8 @@ export function TutorialScreen({route, navigation}: TrialStartScreenProps): Reac
         return require('./TrailMaking.jpg');
       case Routes.CardSorting:
         return require('./CardSorting.jpg');
+      case Routes.LetterIdentification:
+        return require('./LetterIdentification.jpg');
       default:
         return undefined;
     }

@@ -20,7 +20,6 @@ export interface TestResultsBase {
 
 export interface Trial {
   run: TrialRun;
-  completed: boolean;
   reactionTimeResults?: ReactionTimeTestResults;
   trailMakingResults?: TrailMakingResults;
   cardSortingResults?: CardSortingResults;
@@ -44,7 +43,6 @@ const initialState: ParticipantsState = {
 function createDefaultTrial(run: TrialRun): Trial {
   return {
     run,
-    completed: false,
   };
 }
 
@@ -63,7 +61,7 @@ function createDefaultParticipant(name: string): Participant {
 export interface RecordResultsPayload {
   name: string;
   run: TrialRun;
-  results: Partial<Omit<Trial, 'run' | 'completed'>>;
+  results: Partial<Omit<Trial, 'run'>>;
 }
 
 const slice = createSlice({
