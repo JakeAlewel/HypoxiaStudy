@@ -5,11 +5,17 @@ import {useCallback} from 'react';
 import type {ReactionTimeTestResults} from '../../screens/ReactionTimeScreen/ReactionTimeScreen';
 import type {TrailMakingResults} from '../../screens/TrailMakingScreen/TrailMakingScreen';
 import type {CardSortingResults} from '../../screens/CardSortingScreen/CardSortingScreen';
+import type {LetterIdentificationResults} from '../../screens/LetterIdentificationScreen/LetterIdentificationScreen';
 
 export enum TrialRun {
   Ground = 'Ground',
   Air1 = 'Air1',
   Air2 = 'Air2',
+}
+
+export interface TestResultsBase {
+  startTime: string;
+  endTime: string;
 }
 
 export interface Trial {
@@ -18,6 +24,7 @@ export interface Trial {
   reactionTimeResults?: ReactionTimeTestResults;
   trailMakingResults?: TrailMakingResults;
   cardSortingResults?: CardSortingResults;
+  letterIdentificationResults?: LetterIdentificationResults;
 }
 
 export interface Participant {

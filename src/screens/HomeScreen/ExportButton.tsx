@@ -8,6 +8,7 @@ import Share from 'react-native-share';
 import {ReactionTimeTestResults} from '../ReactionTimeScreen/ReactionTimeScreen';
 import {TrailMakingResults} from '../TrailMakingScreen/TrailMakingScreen';
 import {CardSortingResults} from '../CardSortingScreen/CardSortingScreen';
+import {LetterIdentificationResults} from '../LetterIdentificationScreen/LetterIdentificationScreen';
 
 type Stringable = string | number | boolean | undefined;
 
@@ -31,12 +32,21 @@ const cardSortingToColumns = (cardSorting?: CardSortingResults): Stringable[] =>
   return [cardSorting?.errorCount];
 };
 
+const letterIdentificationToColumns = (letterIdentification?: LetterIdentificationResults): Stringable[] => {
+  return (letterIdentification?.entries ?? []).reduce<Stringable[]>((arr, entry) => {
+    arr.push(entry.guess);
+    arr.push(entry.correct);
+    arr.push(entry.delay);
+    return arr;
+  }, []);
+};
+
 const trialDataToColumns = (trial: Trial): Stringable[] => {
   return [
     ...reactionTimeToColumns(trial.reactionTimeResults),
     ...trailMakingToColumns(trial.trailMakingResults),
     ...cardSortingToColumns(trial.cardSortingResults),
-    // ...letterMatchingToColumns(trial.letterMatchingResults),
+    ...letterIdentificationToColumns(trial.letterIdentificationResults),
   ];
 };
 
