@@ -7,6 +7,8 @@ import {recordResults, TrialRun} from '../../redux/reducers/participants';
 import {useRef, useState} from 'react';
 import {MarkerPositions} from './MarkerPositions';
 import {TrailMarker} from './TrailMarker';
+import {useCalculateTrails} from './useCalculateTrails';
+import {TrailLine} from './TrailLine';
 
 type TrailMakingScreenProps = NativeStackScreenProps<RootStackParamList, Routes.TrailMaking>;
 
@@ -45,6 +47,7 @@ export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): 
   };
 
   const markers = MarkerPositions[run];
+  const trails = useCalculateTrails(markers);
   const [targetIndex, setTargetIndex] = useState(0);
 
   const createPressHandler = (index: number) => () => {
@@ -61,6 +64,9 @@ export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): 
   return (
     <Screen>
       <View style={{flex: 1, width: '100%', height: '100%'}}>
+        {trails.map((pos, index) => (
+          <TrailLine key={index} index={index} targetIndex={targetIndex} {...pos} />
+        ))}
         {markers.map((pos, index) => (
           <TrailMarker
             key={index}
