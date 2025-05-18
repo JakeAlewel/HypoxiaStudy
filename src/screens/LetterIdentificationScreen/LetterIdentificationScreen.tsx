@@ -47,7 +47,7 @@ export function LetterIdentificationScreen({route, navigation}: LetterIdentifica
 
   const rules = LetterRules[run];
   const [ruleIndex, setRuleIndex] = useState<number>(0);
-  const {display, target, correctAnswer, large} = rules[ruleIndex];
+  const {display, target, correctAnswer} = rules[ruleIndex];
 
   const lastShownRef = useRef<Date>(new Date());
 
