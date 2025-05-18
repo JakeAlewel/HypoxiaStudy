@@ -6,6 +6,8 @@ import {Colors} from '../../theme/colors';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import {ReactionTimeTestResults} from '../ReactionTimeScreen/ReactionTimeScreen';
+import {TrailMakingResults} from '../TrailMakingScreen/TrailMakingScreen';
+import {CardSortingResults} from '../CardSortingScreen/CardSortingScreen';
 
 type Stringable = string | number | boolean | undefined;
 
@@ -21,11 +23,19 @@ const reactionTimeToColumns = (reactionTime?: ReactionTimeTestResults): Stringab
   ];
 };
 
+const trailMakingToColumns = (trailMaking?: TrailMakingResults): Stringable[] => {
+  return [trailMaking?.completionTime, trailMaking?.errorCount];
+};
+
+const cardSortingToColumns = (cardSorting?: CardSortingResults): Stringable[] => {
+  return [cardSorting?.errorCount];
+};
+
 const trialDataToColumns = (trial: Trial): Stringable[] => {
   return [
     ...reactionTimeToColumns(trial.reactionTimeResults),
-    // ...trailMakingToColumns(trial.trailMakingResults),
-    // ...cardSortingToColumns(trial.cardSortingResults),
+    ...trailMakingToColumns(trial.trailMakingResults),
+    ...cardSortingToColumns(trial.cardSortingResults),
     // ...letterMatchingToColumns(trial.letterMatchingResults),
   ];
 };

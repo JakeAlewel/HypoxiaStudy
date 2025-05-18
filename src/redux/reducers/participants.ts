@@ -2,8 +2,9 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../RootState';
 import {useSelector} from 'react-redux';
 import {useCallback} from 'react';
-import {ReactionTimeTestResults} from '../../screens/ReactionTimeScreen/ReactionTimeScreen';
-import {TrailMakingResults} from '../../screens/TrailMakingScreen/TrailMakingScreen';
+import type {ReactionTimeTestResults} from '../../screens/ReactionTimeScreen/ReactionTimeScreen';
+import type {TrailMakingResults} from '../../screens/TrailMakingScreen/TrailMakingScreen';
+import type {CardSortingResults} from '../../screens/CardSortingScreen/CardSortingScreen';
 
 export enum TrialRun {
   Ground = 'Ground',
@@ -16,6 +17,7 @@ export interface Trial {
   completed: boolean;
   reactionTimeResults?: ReactionTimeTestResults;
   trailMakingResults?: TrailMakingResults;
+  cardSortingResults?: CardSortingResults;
 }
 
 export interface Participant {
@@ -79,6 +81,7 @@ const slice = createSlice({
       };
     },
     recordResults: (state, {payload: {name, run, results}}: PayloadAction<RecordResultsPayload>) => {
+      // I think immer lets me avoid this deep spreading.
       return {
         ...state,
         participants: {

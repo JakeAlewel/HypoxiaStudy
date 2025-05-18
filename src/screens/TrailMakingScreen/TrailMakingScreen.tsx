@@ -76,7 +76,7 @@ export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): 
             onPress={createPressHandler(index)}
           />
         ))}
-        {/* Uncomment the image to display the original layout guide */}
+        {/* Uncomment to display the original layout guide image */}
         {/* <TrailMakingGuide run={run} /> */}
       </View>
     </Screen>
