@@ -29,6 +29,8 @@ export function TutorialScreen({route, navigation}: TrialStartScreenProps): Reac
     switch (trialRoute) {
       case Routes.ReactionTime:
         return require('./ReactionTime.jpg');
+      case Routes.TrailMaking:
+        return require('./TrailMaking.jpg');
       case Routes.CardSorting:
         return require('./CardSorting.jpg');
       default:
