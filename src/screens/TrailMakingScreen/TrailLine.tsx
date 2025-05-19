@@ -2,6 +2,9 @@ import React from 'react';
 import {View} from 'react-native';
 import {Colors} from '../../theme/colors';
 
+const INITIAL_WIDTH = 1;
+const INITIAL_HEIGHT = 8;
+
 export function TrailLine({
   x,
   y,
@@ -21,16 +24,15 @@ export function TrailLine({
     return null;
   }
 
-  console.log(x, y, (angle * 180) / Math.PI);
   return (
     <View
       style={{
         position: 'absolute',
-        top: -4,
-        left: -0.5,
+        top: -INITIAL_HEIGHT / 2,
+        left: -INITIAL_WIDTH / 2,
         backgroundColor: Colors.DarkBlue,
-        width: 1,
-        height: 8,
+        width: INITIAL_WIDTH,
+        height: INITIAL_HEIGHT,
         transform: [{translateX: x}, {translateY: y}, {rotate: `${angle}rad`}, {scaleX: length}],
       }}
     />

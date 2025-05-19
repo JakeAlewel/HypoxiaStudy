@@ -20,10 +20,10 @@ export interface TestResultsBase {
 
 export interface Trial {
   run: TrialRun;
-  reactionTimeResults?: ReactionTimeTestResults;
-  trailMakingResults?: TrailMakingResults;
-  cardSortingResults?: CardSortingResults;
-  letterIdentificationResults?: LetterIdentificationResults;
+  reactionTimeResults?: ReactionTimeTestResults & TestResultsBase;
+  trailMakingResults?: TrailMakingResults & TestResultsBase;
+  cardSortingResults?: CardSortingResults & TestResultsBase;
+  letterIdentificationResults?: LetterIdentificationResults & TestResultsBase;
 }
 
 export interface Participant {

@@ -6,8 +6,7 @@ import {TargetButton, TargetButtonSize} from './TargetButton';
 import {useEffect, useRef, useState} from 'react';
 import {Delay, Delays, Index} from './Delays';
 import {Colors} from '../../theme/colors';
-import {useDispatch} from 'react-redux';
-import {recordResults} from '../../redux/reducers/participants';
+import {useRecordResults} from '../../redux/utils';
 
 type ReactionTimeScreenProps = NativeStackScreenProps<RootStackParamList, Routes.ReactionTime>;
 
@@ -30,7 +29,7 @@ export interface ReactionTimeTestResults {
 
 export function ReactionTimeScreen({route, navigation}: ReactionTimeScreenProps): React.ReactElement {
   const {name, run} = route.params;
-  const dispatch = useDispatch();
+  const {record} = useRecordResults(name, run);
 
   const testResults = useRef<ReactionTimeTestResults>({
     buttonResults: [],
@@ -38,15 +37,8 @@ export function ReactionTimeScreen({route, navigation}: ReactionTimeScreenProps)
   });
 
   const onComplete = () => {
-    dispatch(
-      recordResults({
-        name,
-        run,
-        results: {
-          reactionTimeResults: testResults.current,
-        },
-      }),
-    );
+    record('reactionTimeResults', testResults.current);
+
     navigation.popTo(Routes.Tutorial, {
       name,
       run,
@@ -111,7 +103,7 @@ export function ReactionTimeScreen({route, navigation}: ReactionTimeScreenProps)
         return () => {
           clearTimeout(gameTimeout.current);
           setState(GameState.Idle);
-          setErrorMessage('Please wait for a target to activate.');
+          setErrorMessage('Please hold this button until target activates.');
           testResults.current.earlyLiftCount += 1;
         };
       } else if (state === GameState.Waiting) {
@@ -180,7 +172,7 @@ export function ReactionTimeScreen({route, navigation}: ReactionTimeScreenProps)
               top: undefined,
               bottom: TargetButtonSize + 16,
             }}>
-            {errorMessage ? errorMessage : 'Press the button to continue'}
+            {errorMessage ? errorMessage : 'Press and hold this button to continue.'}
           </Text>
         )}
       </View>

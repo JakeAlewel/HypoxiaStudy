@@ -16,13 +16,24 @@ export interface ParticipantDetailsScreenParams {
 
 type ParticpantDetailsScreenProps = NativeStackScreenProps<RootStackParamList, Routes.ParticipantDetails>;
 
-function TestStatus({name, run, completed}: {name: string; run: TrialRun; completed: boolean}): React.ReactElement {
+function TestStatus({
+  name,
+  run,
+  completed,
+  enabled,
+}: {
+  name: string;
+  run: TrialRun;
+  completed: boolean;
+  enabled: boolean;
+}): React.ReactElement {
   const navigation = useNavigation();
 
   const styles: ViewStyle = {
     ...bordered,
     padding: 16,
     flexDirection: 'row',
+    backgroundColor: enabled ? Colors.White : Colors.LightGray,
   };
 
   const children = (
@@ -34,7 +45,7 @@ function TestStatus({name, run, completed}: {name: string; run: TrialRun; comple
     </>
   );
 
-  if (completed) {
+  if (completed || !enabled) {
     return <View style={styles}>{children}</View>;
   }
 
@@ -56,6 +67,10 @@ export function ParticipantDetailsScreen({route}: ParticpantDetailsScreenProps):
   const {name} = route.params;
   const participant = useParticipant(name);
 
+  const groundCompleted = isTrialComplete(participant.trials[TrialRun.Ground]);
+  const air1Completed = isTrialComplete(participant.trials[TrialRun.Air1]);
+  const air2Completed = isTrialComplete(participant.trials[TrialRun.Air2]);
+
   return (
     <Screen gutter style={{justifyContent: 'space-between'}}>
       <View>
@@ -74,9 +89,14 @@ export function ParticipantDetailsScreen({route}: ParticpantDetailsScreenProps):
       </View>
       <View style={{gap: 16}}>
         <Text style={{fontSize: 18, fontWeight: 500}}>Trials:</Text>
-        {Object.values(participant.trials).map(trial => (
-          <TestStatus key={trial.run} name={name} run={trial.run} completed={isTrialComplete(trial)} />
-        ))}
+        <TestStatus name={name} run={TrialRun.Ground} completed={groundCompleted} enabled />
+        <TestStatus name={name} run={TrialRun.Air1} completed={air1Completed} enabled={groundCompleted} />
+        <TestStatus
+          name={name}
+          run={TrialRun.Air2}
+          completed={air2Completed}
+          enabled={groundCompleted && air1Completed}
+        />
       </View>
     </Screen>
   );

@@ -2,12 +2,11 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList, Routes} from '../../navigators/Routes';
 import {Screen} from '../../components/Screen/Screen';
 import {Text, View} from 'react-native';
-import {useDispatch} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';
-import {recordResults} from '../../redux/reducers/participants';
 import {ShapeCard} from './ShapeCard';
 import {CardRules, Shape} from './CardRules';
 import {Colors} from '../../theme/colors';
+import {useRecordResults} from '../../redux/utils';
 
 enum FeedbackState {
   NotStarted = 'NotStarted',
@@ -24,22 +23,14 @@ type CardSortingScreenProps = NativeStackScreenProps<RootStackParamList, Routes.
 
 export function CardSortingScreen({route, navigation}: CardSortingScreenProps): React.ReactElement {
   const {name, run} = route.params;
-  const dispatch = useDispatch();
+  const {record} = useRecordResults(name, run);
 
   const errorCount = useRef(0);
 
   const onComplete = () => {
-    dispatch(
-      recordResults({
-        name,
-        run,
-        results: {
-          cardSortingResults: {
-            errorCount: errorCount.current,
-          },
-        },
-      }),
-    );
+    record('cardSortingResults', {
+      errorCount: errorCount.current,
+    });
 
     navigation.popTo(Routes.Tutorial, {
       name,

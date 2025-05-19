@@ -3,10 +3,9 @@ import {RootStackParamList, Routes} from '../../navigators/Routes';
 import {Screen} from '../../components/Screen/Screen';
 import {NativeSyntheticEvent, Text, TextInput, TextInputChangeEventData, View} from 'react-native';
 import {LetterRules} from './LetterRules';
-import {recordResults} from '../../redux/reducers/participants';
 import {useEffect, useRef, useState} from 'react';
 import {bordered} from '../../theme/border';
-import {useDispatch} from 'react-redux';
+import {useRecordResults} from '../../redux/utils';
 
 export interface LetterIdentificationEntry {
   delay: number;
@@ -22,22 +21,14 @@ type LetterIdentificationScreenProps = NativeStackScreenProps<RootStackParamList
 
 export function LetterIdentificationScreen({route, navigation}: LetterIdentificationScreenProps): React.ReactElement {
   const {name, run} = route.params;
-  const dispatch = useDispatch();
+  const {record} = useRecordResults(name, run);
 
   const entries = useRef<LetterIdentificationEntry[]>([]);
 
   const onComplete = () => {
-    dispatch(
-      recordResults({
-        name,
-        run,
-        results: {
-          letterIdentificationResults: {
-            entries: entries.current,
-          },
-        },
-      }),
-    );
+    record('letterIdentificationResults', {
+      entries: entries.current,
+    });
 
     navigation.replace(Routes.TrialCompletion, {
       name,
@@ -57,8 +48,8 @@ export function LetterIdentificationScreen({route, navigation}: LetterIdentifica
 
   const handleLetter = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
     const delay = new Date().getTime() - lastShownRef.current.getTime();
-    const guess = e.nativeEvent.text;
-    const correct = guess.toUpperCase() === correctAnswer.toUpperCase();
+    const guess = e.nativeEvent.text.toUpperCase();
+    const correct = guess === correctAnswer.toUpperCase();
 
     entries.current.push({
       delay,
@@ -90,7 +81,7 @@ export function LetterIdentificationScreen({route, navigation}: LetterIdentifica
         keyboardType="ascii-capable"
         textContentType="none"
         autoComplete="off"
-        autoCapitalize="none"
+        autoCapitalize="characters"
         autoCorrect={false}
       />
     </Screen>

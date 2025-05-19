@@ -2,13 +2,12 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList, Routes} from '../../navigators/Routes';
 import {Screen} from '../../components/Screen/Screen';
 import {View} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {recordResults, TrialRun} from '../../redux/reducers/participants';
 import {useRef, useState} from 'react';
 import {MarkerPositions} from './MarkerPositions';
 import {TrailMarker} from './TrailMarker';
 import {useCalculateTrails} from './useCalculateTrails';
 import {TrailLine} from './TrailLine';
+import {useRecordResults} from '../../redux/utils';
 
 type TrailMakingScreenProps = NativeStackScreenProps<RootStackParamList, Routes.TrailMaking>;
 
@@ -19,25 +18,16 @@ export interface TrailMakingResults {
 
 export function TrailMakingScreen({route, navigation}: TrailMakingScreenProps): React.ReactElement {
   const {name, run} = route.params;
-
-  const dispatch = useDispatch();
+  const {record} = useRecordResults(name, run);
 
   const errorCount = useRef(0);
   const startTime = useRef(new Date().getTime());
 
   const onComplete = () => {
-    dispatch(
-      recordResults({
-        name,
-        run,
-        results: {
-          trailMakingResults: {
-            errorCount: errorCount.current,
-            completionTime: new Date().getTime() - startTime.current,
-          },
-        },
-      }),
-    );
+    record('trailMakingResults', {
+      errorCount: errorCount.current,
+      completionTime: new Date().getTime() - startTime.current,
+    });
 
     navigation.popTo(Routes.Tutorial, {
       name,

@@ -1,6 +1,6 @@
 import {Alert} from 'react-native';
 import {Button} from '../../components/Button/Button';
-import {ParticipantsState, Trial, TrialRun} from '../../redux/reducers/participants';
+import {ParticipantsState, TestResultsBase, Trial, TrialRun} from '../../redux/reducers/participants';
 import {store} from '../../redux/rootStore';
 import {Colors} from '../../theme/colors';
 import RNFS from 'react-native-fs';
@@ -11,6 +11,10 @@ import {CardSortingResults} from '../CardSortingScreen/CardSortingScreen';
 import {LetterIdentificationResults} from '../LetterIdentificationScreen/LetterIdentificationScreen';
 
 type Stringable = string | number | boolean | undefined;
+
+const baseTestResultsToColumns = (testName: string, results?: TestResultsBase): Stringable[] => {
+  return [testName, results?.startTime, results?.endTime];
+};
 
 const reactionTimeToColumns = (reactionTime?: ReactionTimeTestResults): Stringable[] => {
   return [
@@ -43,29 +47,34 @@ const letterIdentificationToColumns = (letterIdentification?: LetterIdentificati
 
 const trialDataToColumns = (trial: Trial): Stringable[] => {
   return [
+    ...baseTestResultsToColumns('ReactionTime', trial.reactionTimeResults),
     ...reactionTimeToColumns(trial.reactionTimeResults),
+
+    ...baseTestResultsToColumns('TrailMaking', trial.trailMakingResults),
     ...trailMakingToColumns(trial.trailMakingResults),
+
+    ...baseTestResultsToColumns('CardSorting', trial.cardSortingResults),
     ...cardSortingToColumns(trial.cardSortingResults),
+
+    ...baseTestResultsToColumns('LetterId', trial.letterIdentificationResults),
     ...letterIdentificationToColumns(trial.letterIdentificationResults),
   ];
 };
 
 const generateCSV = ({participants}: ParticipantsState): string => {
-  console.log(JSON.stringify(participants, null, 2));
+  const rows: string[] = Object.values(participants).map(participant => {
+    const combinedData: Stringable[] = [
+      participant.name,
+      participant.dateAdded,
+      ...trialDataToColumns(participant.trials[TrialRun.Ground]),
+      ...trialDataToColumns(participant.trials[TrialRun.Air1]),
+      ...trialDataToColumns(participant.trials[TrialRun.Air2]),
+    ];
 
-  const data: string = Object.values(participants)
-    .map(participant =>
-      [
-        participant.name,
-        participant.dateAdded,
-        ...trialDataToColumns(participant.trials[TrialRun.Ground]),
-        ...trialDataToColumns(participant.trials[TrialRun.Air1]),
-        ...trialDataToColumns(participant.trials[TrialRun.Air2]),
-      ].join(','),
-    )
-    .join('\n');
+    return combinedData.join(',');
+  });
 
-  return data;
+  return rows.join('\n');
 };
 
 export function ExportButton(): React.ReactElement {
